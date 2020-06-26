@@ -1,1 +1,2 @@
 # situacion-fosas-guanajuato
+Este es un proyecto donde se detalla la situación de fosas clandestinas en la entidad de Guanajuato, México. En éste se describen el panorama general conforme a datos oficiales y de prensa, los resultados de municipios con probabilidades altas de tener fosas aún no localizadas y una discusión entorno a la Ley General en Materia de Desaparición Forzada y su armonización a nivel estatal.
