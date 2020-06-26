@@ -1,0 +1,6 @@
+"0",""
+"0","setwd(here(""output""))"
+"2","The working directory was changed to /Users/jorgeruizreyes/Desktop/R/análisis_espacial/output inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
+"0","ggsave(""total_cuerpos_prensa.png"")"
+"2","Saving 7.29 x 4.51 in image
+"

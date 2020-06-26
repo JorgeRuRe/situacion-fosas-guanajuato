@@ -1,0 +1,31 @@
+"0","# paquetes "
+"0","pacman::p_load(tidyverse, sf, here)"
+"0",""
+"0","# datos "
+"0","setwd(here(""data""))"
+"2","The working directory was changed to /Users/jorgeruizreyes/Desktop/R/análisis_espacial/data inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
+"0","fosas_prensa <- read_csv(here(""data"", ""prensa_unida.csv"")) %>% "
+"0","  mutate(CVEGEO = paste0(cve_ente, cve_muni))"
+"2","Parsed with column specification:
+cols(
+  .default = col_character(),
+  ano = [32mcol_double()[39m,
+  cve_muni = [32mcol_double()[39m,
+  restos_si_1_no_0 = [32mcol_double()[39m
+)
+"
+"2","See spec(...) for full column specifications.
+"
+"0","# Preparar "
+"0","fosas_prensa$CVEGEO <- as.factor(fosas_prensa$CVEGEO) # convierto a factor"
+"0","fosas_prensa$numero_de_fosas <- as.numeric(fosas_prensa$numero_de_fosas) "
+"2","NAs introduced by coercion"
+"0","fosas_prensa$total_de_cuerpos_y_osamentas <- as.numeric(fosas_prensa$total_de_cuerpos_y_osamentas)"
+"2","NAs introduced by coercion"
+"0","fosas_prensa$total_restos <- as.numeric(fosas_prensa$total_restos)"
+"2","NAs introduced by coercion"
+"0","fosas_prensa$fosas_altas <- as.numeric(fosas_prensa$fosas_altas)"
+"2","NAs introduced by coercion"
+"0","fosas_prensa$cuerpos_altos <- as.numeric(fosas_prensa$cuerpos_altos)"
+"2","NAs introduced by coercion"
+"0","fosas_prensa$municipio <- as.factor(fosas_prensa$municipio)"
