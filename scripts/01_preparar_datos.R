@@ -53,4 +53,7 @@ fosas_guanajuato_final <- fosas_guanajuato_final[, col_order]
 write_rds(fosas_guanajuato_final,
           path = "data/clean/fosas_guanajuato_final.rds")
 
+write_csv(fosas_guanajuato_final,
+          path = "data/clean/fosas_guanajuato_final.csv")
+
 # Fin 

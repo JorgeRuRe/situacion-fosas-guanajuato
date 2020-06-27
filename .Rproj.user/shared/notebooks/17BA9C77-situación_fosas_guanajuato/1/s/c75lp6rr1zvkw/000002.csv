@@ -1,8 +1,0 @@
-"0","# Inline code "
-"0","suma_fosas <- casos_por_municipio %>% "
-"0","  ungroup() %>% "
-"0","  summarise(suma = sum(total_fosas, na.rm = T))"
-"0",""
-"0","suma_cuerpos <- casos_por_municipio %>% "
-"0","  ungroup() %>% "
-"0","  summarise(suma = sum(total_cuerpos, na.rm = T))"
