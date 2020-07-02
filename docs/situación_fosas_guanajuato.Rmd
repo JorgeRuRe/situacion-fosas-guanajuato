@@ -36,7 +36,7 @@ pacman::p_load(tidyverse, sf, here, leaflet)
 # Introducción 
 *** 
 
-El presente documento describe la situación de fosas clandestinas en la entidad de Guanajuato en el periodo de 2009 al primer semestre de 2020.  En la primera sección se presentan las cifras reportadas por fuentes hemerográficas, que provienen del esfuerzo de documentación realizado en conjunto con la Comisión Mexicana de Defensa y Promoción de los Derechos Humanos, A.C. (CMDPDH) y Artículo 19 Oficina para México y Centroamérica, el Programa de Derechos Humanos de la Universidad Iberoamericana (PDH Ibero) y la Universidad Iberoamericana de León. En la segunda sección se presentan los municipios con alta probabilidad de tener fosas clandestinas, aún no observadas por ambas fuentes, a través de un modelo estadístico desarrollado por Data Cívica, el Human Rights Data Analysis Group (HRDAG) y el PDH Ibero. 
+El presente documento describe la situación de fosas clandestinas en la entidad de Guanajuato en el periodo de 2009 al primer semestre de 2020.  En la primera sección se presenta una discusión sobre los problemas para acceder a datos oficiales en la entidad, así como las cifras reportadas por fuentes hemerográficas, que provienen del esfuerzo de documentación realizado en conjunto con la Comisión Mexicana de Defensa y Promoción de los Derechos Humanos, A.C. (CMDPDH) y Artículo 19 Oficina para México y Centroamérica, el Programa de Derechos Humanos de la Universidad Iberoamericana (PDH Ibero). Además, se recibieron datos complementarios de Fabrizio Lorusso, académico de la Universidad Iberoamericana de León. En la segunda sección se presenta un mapa a escala municipal de los hallazgos de fosas reportados por prensa. En la tercera sección se presentan los municipios con alta probabilidad de tener fosas clandestinas, aún no observadas por ambas fuentes, a través de un modelo estadístico desarrollado por Data Cívica, el Human Rights Data Analysis Group (HRDAG) y el PDH Ibero. Por último, la cuerta sección presenta una breve discusión sobre el debate de fosas clandestinas y la Ley de Búsqueda de Personas en la entidad. 
 
 
 
@@ -56,7 +56,7 @@ casos_por_municipio <- fosas_guanajuato_final %>%
 
 # Panorama general 
 
-En el estado de Guanajuato se cuenta principalmente con información de fosas clandestinas que han sido observadas por fuentes hemerográficas. A continuación se presentan los datos que han sido recuperados a través de estas fuentes: 
+Para el estado de Guanajuato se han realizado esfuerzos por recopilar datos oficiales a través de solicitudes de acceso a la información dirigidas a la Fiscalía General del Estado de Guanajuato (FGJE). Asimismo, se han recuperado notas de prensa escrita nacional y estatal. A continuación se presenta una descripción de las respuestas y datos que se han obtenido de ambas fuentes. 
 
 ## - Datos oficiales 
 
@@ -102,7 +102,7 @@ suma_cuerpos <- casos_por_municipio %>%
   summarise(suma = sum(total_cuerpos, na.rm = T))
 ```
 
-Con base en lo reportado por la prensa, en el estado de Guanajuato se han observado `r suma_fosas` fosas clandestinas, de las cuales se han exhumado `r suma_cuerpos` cuerpos en 29 de los 46 municipios, entre los años 2009 y al primer semestre de 2020. La tendencia del número de fosas observadas hasta el año 2019 puede observarse en la siguiente figura.^[Queremos hacer énfasis en que los datos que presentaremos de esta fuente no necesariamente están reflejando los patrones de hallazgos de fosas y de desaparición de personas en la entidad. Lo que estos datos están reportando es el proceso sobre cómo se produce/observa socialmente esta información, así como los posibles sesgos que tienen. Algunos de estos sesgos pueden ser: 1) capacidades institucionales para registrar los datos; 2) capacidad de abarcar determinadas áreas geográficas; 3) factores políticos y sociales que permitan que un hallazgo se reporte o no, entre otros.]
+Con base en lo reportado por la prensa ^[Para una revisión a la metodología empleada para obtener esta información consultar: González, Denise y Jorge Ruiz (et.al.). Violencia y terror. Hallazgos sobre fosas clandestinas en México (2019). Versión electrónica, disponible en: https://ibero.mx/files/2019/violencia-y-terror.pdf], en el estado de Guanajuato se han observado `r suma_fosas` fosas clandestinas, de las cuales se han exhumado `r suma_cuerpos` cuerpos en 29 de los 46 municipios, entre los años 2009 y al primer semestre de 2020. La tendencia del número de fosas observadas hasta el año 2019 puede observarse en la siguiente figura.^[Queremos hacer énfasis en que los datos que presentaremos de esta fuente no necesariamente están reflejando los patrones de hallazgos de fosas y de desaparición de personas en la entidad. Lo que estos datos están reportando es el proceso sobre cómo se produce/observa socialmente esta información, así como los posibles sesgos que tienen. Algunos de estos sesgos pueden ser: 1) capacidades institucionales para registrar los datos; 2) capacidad de abarcar determinadas áreas geográficas; 3) factores políticos y sociales que permitan que un hallazgo se reporte o no, entre otros.]
 
 
 ```{r}
@@ -131,6 +131,7 @@ casos_por_año %>%
        subtitle = "2009-2019")
 ```
 
+***
 Como se puede observar, entre los años 2009 a 2015, se reportaron menos de cinco fosas clandestinas al año, sin embargo, en el año 2016 inicia un comportamiento al alza, culminando en el año 2019 con el mayor número de fosas observadas por la prensa en esta entidad.  
 
 Asimismo, el número total de fosas observadas por municipio puede consultarse en la siguiente figura.
@@ -151,6 +152,7 @@ casos_por_municipio %>%
        subtitle = "2009-2020")
 ```
 
+***
 Cómo se puede observar, el municipio de Pénjamo es el que registra la mayor cantidad de fosas registradas entre 2009-2020, seguido de Irapuato, Villagrán y Celaya. Estos cuatro municipios concentran el 34.73% del total de fosas en la entidad.
 
 Asimismo, el número total de cuerpos exhumados por municipio puede observarse en la siguiente figura.
@@ -171,6 +173,7 @@ casos_por_municipio %>%
        subtitle = "2009-2020")
 ```
 
+***
 A diferencia del total de fosas, el municipio Villagrán es aquel donde se han exhumado la mayor cantidad de cuerpos entre 2009-2020, seguido de Irapuato, Celaya y Pénjamos. Estos cuatro municipios concentran el 48.51% del total de cuerpos exhumados en la entidad. 
 
 # Mapa de municipios con fosas en la entidad 
@@ -214,6 +217,7 @@ leaflet() %>%
             title = "Total fosas")
 ```
 
+***
 En el mapa se puede identificar cómo es que los municipios de las regiones Centro-Oeste, Sur-Oeste, Sur y Centro-Este son aquellos que han tenido observaciones de fosas en la entidad (municipios en naranja), mientras que la regiones Norte y Noreste permancen sin tener registros de fosas por la prensa (municipios en blanco).^[Lo que es imporante tomar en cuenta es que pudieron haber hallazgos de fosas en estos municipios, sin embargo la prensa no tuvo capacidad de registrarlos/observarlos.] 
 
 # Municipios con probabilidades altas de tener fosas aún no localizadas 
@@ -224,6 +228,7 @@ En un esfuerzo conjunto realizado por el Programa de Derechos Humanos de la Univ
 INSERTAR MAPA 
 
 
+***
 Los mapas anteriores presentan los puntajes de nuestro modelo para la entidad en los años 2011 y 2018. La intensidad del color verde significa que la probabilidad de tener fosas era más alta para determinados municipios. De esta forma, por ejemplo, se puede ver que habían 10 municipios con una probabilidad mayor a 0.70 de tener fosas en 2017. El municipio con la probabilidad más alta era Celaya, seguido de Acámbaro y Silao de Victoria. A pesar de esto, en el año 2011 solo existieron dos municipios con registros de fosas, los cuales fueron Uriangato y San José Iturbide. Esto tiene dos posibles implicaciones. La primera es que los otros municipios pudieron tener fosas, sin embargo, no se registraron por la prensa. La segunda es que esos municipios, al ser similares a otros donde si existieron fosas y por el puntaje obtenido, debieron de ser considerados para realizar búsquedas de fosas en ese año. 
 
 De igual forma, para 2018 vemos que aumentó el puntaje para la mayoría de los municipios de la entidad. De los 10 municipios con las probabilidades más altas, tres tuvieron registros por parte de la prensa (Irapuato, León, Villagrán), lo cual confirma que nuestro modelo identifica correctamente los municipios que pueden tener fosas. No solo esto, sino que Celaya, Tarímoro y Silao de la Victoria fueron aquellos que el modelo indicaba que tenían la probabilidad más alta de tener fosas, sin embargo no existieron registros por parte de la prensa. Aunado a esto, vemos que municipios en la región norte como San Felipe y San Luis de la Paz tuvieron probabildades mayores a 0.50 de tener fosas. Sin embargo, la prensa no cuenta con registros en estos municipios entre 2009-2020. A pesar de esto, dadas los puntajes, consideramos que estos municipios no deberían descartarse para iniciar procesos de búsqueda y exhumación. 
@@ -273,10 +278,7 @@ Vale la pena recuperar aquí estas propuestas definitorias que, entre marzo y ma
 
 Un planteamiento, respaldado por algunos colectivos y el Comité Internacional de la Cruz Roja, se articulaba en diferentes apartados e incorporaba la exigencia de rigor desde el derecho y la arqueología forense pero con el ánimo de poder reconocer múltiples sitios y condiciones de hallazgo.
 
-<style>
-div.blue { background-color:#8BE8CD; border-radius: 5px; padding: 20px;}
-</style>
-<div class = "blue">
+
 **Sitio**: Corresponde a cualquier lugar donde se han encontrado cuerpos de personas fallecidas. (Por ejemplo: cementerio, base militar, hacienda, un edificio, etc.) (Para el Código Nacional de Procedimientos Penales corresponde al Lugar de los Hechos o del hallazgo (Artículo 227). 
 
 **Punto de depósito ilegal**: Un lugar específico, invariablemente incluido dentro del Sitio, en el cual se colocaron, ya sea inhumados total o parcialmente, o dispuestos, indicios, uno o más cuerpos o partes de ellos. 
@@ -284,18 +286,15 @@ div.blue { background-color:#8BE8CD; border-radius: 5px; padding: 20px;}
 
 **Fosa clandestina**: Tipo de punto de depósito que consiste en un espacio en el sustrato terrestre, natural o artificial, en el cual se depositaron uno o más cuerpos o partes de ellos de manera ilegal. 
 Lugar de inhumación o resguardo de Personas Fallecidas No Identificadas y Personas Fallecidas Identificadas No Reclamadas: Espacio destinado por el Estado para el resguardo de las Personas Fallecidas No Identificadas y Personas Fallecidas Identificadas No Reclamadas. 
-</div>
+
 
 Otra propuesta, no muy disímil de la anterior, era más acotada y era parte de una serie de recomendaciones planteadas por la Oficina del Alto Comisionado de las Naciones Unidas para los Derechos Humanos en México y respaldada por el trabajo de académicos y defensores de derechos humanos en Guanajuato. Igualmente hay una definición de fosa clandestina, acompañada de una tipología de sitios de hallazgo, o sitios de depósito, que es más amplia e incluye las fosas.
 
-<style>
-div.blue { background-color:#8BE8CD; border-radius: 5px; padding: 20px;}
-</style>
-<div class = "blue">
+
 **Sitio de depósito**: cualquier sitio en el que se colocaron uno o más cadáveres o restos humanos, y que no fue específicamente determinado por las autoridades para dicho fin. 
 
 **Fosa clandestina**: cualquier sitio en el que se colocaron en un espacio en el subsuelo, o en el que se enterraron, total o parcialmente, uno o más cadáveres o restos humanos, y que no fue específicamente determinado por las autoridades para dicho fin. 
-</div>
+
 
 Según esta propuesta el Registro Estatal de Fosas Comunes y Clandestinas, previsto en la Ley, habría tenido que quedar como Registro Estatal de Fosas Comunes, Fosas Clandestinas y Sitios de Depósito, lo cual habría dado mayor claridad a los términos ante la opinión pública y las autoridades en el estado, y habría servido de insumo para alimentar correctamente a los correspondientes registros nacionales. 
 
