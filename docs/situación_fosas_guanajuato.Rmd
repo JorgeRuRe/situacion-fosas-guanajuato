@@ -2,12 +2,14 @@
 title: "<center>Situación sobre fosas clandestinas en Guanajuato<center>"
 date: "<center>6/22/2020<center>"
 output:
+  word_document:
+    toc: yes
   html_document:
-    toc: TRUE
-    toc_float: TRUE
+    toc: yes
+    toc_float: yes
     fig_height: 6
     fig_width: 8
-    fig_caption: TRUE
+    fig_caption: yes
     theme: flatly
     highlight: monochrome
 ---
@@ -196,25 +198,20 @@ guanajuato_mapa_prensa <- map %>%
 
 <center>**Mapa 1**<center> 
 ```{r}
-# Preparar paletas y labs de mapa 
-pal <- colorNumeric("Oranges", guanajuato_mapa_prensa$total_fosas, na.color = "white")
-popup_sb <- paste0("Total de fosas: ", as.numeric(guanajuato_mapa_prensa$total_fosas))
-
-
-# Mapear
-leaflet() %>%
-  addProviderTiles("CartoDB.Positron") %>%
-  setView(-101.0000000, 21.0000000, zoom = 8) %>% 
-  addPolygons(data = guanajuato_mapa_prensa , 
-              fillColor = ~pal(guanajuato_mapa_prensa$total_fosas),
-              fillOpacity = 0.7, 
-              weight = 0.2, 
-              smoothFactor = 0.2, 
-              popup = ~popup_sb) %>%
-  addLegend(pal = pal, 
-            values = guanajuato_mapa_prensa$total_fosas, 
-            position = "bottomright", 
-            title = "Total fosas")
+# Mapear fosas prensa
+guanajuato_mapa_prensa %>%
+  filter(CVE_ENT %in% c("11")) %>% 
+  ggplot(aes(fill = total_fosas)) +
+  # cambia el color y el grosor de las líneas
+  geom_sf(colour = "grey20", size = 0.07) +
+  # agrega títulos
+  labs(title = "Fosas clandestinas observadas por prensa",
+       subtitle = "2007-2017",
+       caption = "PDHIBERO") +
+  # cambia el color de relleno y el título de la leyenda
+  scale_fill_gradient("Total de fosas", high = "#EF5351", low = "#F4E8C1") +
+  # retirar el fondo gris
+  theme_bw()
 ```
 
 ***
