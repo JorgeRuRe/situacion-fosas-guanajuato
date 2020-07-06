@@ -2,7 +2,7 @@
 # Maintainers: OE, JRR
 # Copyright:   2020, PDH-IBERO & Data Cívica, GPL v2 or later
 # ===============================================
-# feminicidios-usaid/import/Makefile
+# situacion-fosas-guanajuato/import/Makefile
 
 .PHONY: all clean
 
