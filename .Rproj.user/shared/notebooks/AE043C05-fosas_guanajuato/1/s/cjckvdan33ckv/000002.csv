@@ -1,3 +1,0 @@
-"0","setwd(here(""data""))"
-"2","The working directory was changed to /Users/jorgeruizreyes/Desktop/R/análisis_espacial/data inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
-"0","write_csv(fosas_guanajuato, ""fosas_guanajuato.csv"")"
