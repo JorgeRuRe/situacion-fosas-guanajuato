@@ -1,4 +1,27 @@
-.Rproj.user
+# System files
+.DS_Store
+
+# R history
 .Rhistory
-.RData
+.Rapp.history
+
+# R Projects and user data
 .Ruserdata
+.Rproj.user/
+
+# Icon files
+Icon
+Icon\r
+Icon\r\r
+
+# VSCode
+**/.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
