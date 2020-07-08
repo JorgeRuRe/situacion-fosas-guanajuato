@@ -1,8 +1,9 @@
 ---
 title: "<center>Situación sobre fosas clandestinas en Guanajuato<center>"
+lang: "es"
 date: "<center>6/22/2020<center>"
 output:
-  html_document:
+  bookdown::html_document2:
     toc: yes
     toc_float: yes
     fig_height: 6
@@ -31,11 +32,11 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ```{r, echo=FALSE, include=FALSE, warning=FALSE, comment=FALSE}
 # paquetes 
-pacman::p_load(tidyverse, sf, here, leaflet)
+pacman::p_load(tidyverse, sf, here, leaflet, ggpubr, kableExtra)
 
 # Load data
 fosas_gto <- readRDS(here("import/output/fosas-gto.rds"))
-preds_gto <- readRDS(here("import/output/preds-gto.rds"))
+preds_gto <- readRDS(here("import/output/preds-gto.rds")) %>% mutate(inegi=as.character(inegi))
 shp_munis <- st_read(here("write/input/shp-munis/Municipios_Mx.shp"))
 
 ```
@@ -44,18 +45,7 @@ shp_munis <- st_read(here("write/input/shp-munis/Municipios_Mx.shp"))
 # Introducción 
 *** 
 
-El presente documento describe la situación de fosas clandestinas en la entidad de Guanajuato en el periodo de 2009 al primer semestre de 2020. En la primera sección se presenta una discusión sobre los problemas para acceder a datos oficiales en la entidad, así como las cifras reportadas por fuentes hemerográficas, que provienen del esfuerzo de documentación realizado en conjunto con la Comisión Mexicana de Defensa y Promoción de los Derechos Humanos, A.C. (CMDPDH) y Artículo 19 Oficina para México y Centroamérica, el Programa de Derechos Humanos de la Universidad Iberoamericana (PDH Ibero). Además, se recibieron datos complementarios de Fabrizio Lorusso, académico de la Universidad Iberoamericana de León. En la segunda sección se presenta un mapa a escala municipal de los hallazgos de fosas reportados por prensa. En la tercera sección se presentan los municipios con alta probabilidad de tener fosas clandestinas, aún no observadas por ambas fuentes, a través de un modelo estadístico desarrollado por Data Cívica, el Human Rights Data Analysis Group (HRDAG) y el PDH Ibero. Por último, la cuerta sección presenta una breve discusión sobre el debate de fosas clandestinas y la Ley de Búsqueda de Personas en la entidad. 
-
-```{r}
-# Preparar por municipio
-casos_por_municipio <- fosas_gto %>% 
-  group_by(municipio, inegi) %>%
-  summarise(total_fosas = sum(fosas, na.rm = T),
-            total_cuerpos = sum(total_cuerpos, na.rm = T),
-            total_masculino = sum(masculino, na.rm = T),
-            total_femenino = sum(femenino, na.rm = T))
-```
-
+El presente documento describe la situación de fosas clandestinas en la entidad de Guanajuato en el periodo de 2009 al primer semestre de 2020. En la primera sección se presenta una discusión sobre los problemas para acceder a datos oficiales en la entidad, así como las cifras reportadas por fuentes hemerográficas, que provienen del esfuerzo de documentación realizado en conjunto con la Comisión Mexicana de Defensa y Promoción de los Derechos Humanos, A.C. (CMDPDH), Artículo 19 Oficina para México y Centroamérica, y el Programa de Derechos Humanos de la Universidad Iberoamericana (PDH Ibero). Además, se recibieron datos complementarios de Fabrizio Lorusso, académico de la Universidad Iberoamericana de León. En la segunda sección se presenta un mapa a escala municipal de los hallazgos de fosas reportados por prensa. En la tercera sección se presentan los municipios con alta probabilidad de tener fosas clandestinas, aún no observadas por ambas fuentes, a través de un modelo estadístico desarrollado por Data Cívica, el Human Rights Data Analysis Group (HRDAG) y el PDH Ibero. Por último, la cuerta sección presenta una breve discusión sobre el debate de fosas clandestinas y la Ley de Búsqueda de Personas en la entidad.
 
 # Panorama general 
 
@@ -67,7 +57,7 @@ El [Informe Especial](http://informe.cndh.org.mx/uploads/menu/30100/InformeEspec
 
 Por otro lado, el 13 de mayo de 2019, el subsecretario de Derechos Humanos, Población y Migración, Alejandro Encinas Rodríguez, y la Comisión Nacional de Búsqueda de Personas presentaron un [Informe](http://www.alejandroencinas.mx/wp-content/uploads/2019/05/Fosas_13mayo19-ok.pdf) de Fosas Clandestinas y Registro Nacional de Personas Desaparecidas o No Localizadas, el cual mencionó, sin ofrecer más detalles al respecto, la localización por parte de la Federación de tan solo una fosa en Guanajuato en los primeros cinco meses del gobierno actual. En cambio, el [mismo informe actualizado](http://www.alejandroencinas.mx/wp-content/uploads/2020/01/REGISTRODEPERSONASDESAPARECIDAS.pdf) al 6 de enero de 2020 no señalaba la presencia de fosas en el estado.
 
-En los últimos años, además, han sido publicadas varias notas de medios locales que han hecho recuentos de las fosas clandestinas y los cadáveres o restos encontrados: el [diario AM](https://www.am.com.mx/guanajuato/noticias/En-3-anos-se-han-hallado-68-cuerpos-en-fosas-20190815-0044.html) el 15 de agosto de 2019 indicaba  5 fosas con 68 cuerpos desde 2016; en enero de 2020 [Zona Franca](https://zonafranca.mx/seguridad/ok-propuesta-diciembre-guanajuato-cementerio-clandestino/) contó 23 fosas y 127 cuerpos en los últimos 5 años; mientras que en el mismo mes el AM habló de 15 fosas acumuladas tan solo desde 2018; por su parte colectivos de víctimas [han denunciado el descubrimiento](https://www.am.com.mx/guanajuato/noticias/Descubren-familias-19-fosas-con-restos-humanos-en-Guanajuato-20200528-0028.html), de enero a mayo de 2020, de 19 fosas clandestinas en la entidad. 
+En los últimos años, además, han sido publicadas varias notas de medios locales que han hecho recuentos de las fosas clandestinas y los cadáveres o restos encontrados: el [diario AM](https://www.am.com.mx/guanajuato/noticias/En-3-anos-se-han-hallado-68-cuerpos-en-fosas-20190815-0044.html) el 15 de agosto de 2019 indicaba 5 fosas con 68 cuerpos desde 2016; en enero de 2020 [Zona Franca](https://zonafranca.mx/seguridad/ok-propuesta-diciembre-guanajuato-cementerio-clandestino/) contó 23 fosas y 127 cuerpos en los últimos 5 años; mientras que en el mismo mes el AM habló de 15 fosas acumuladas tan solo desde 2018; por su parte colectivos de víctimas [han denunciado el descubrimiento](https://www.am.com.mx/guanajuato/noticias/Descubren-familias-19-fosas-con-restos-humanos-en-Guanajuato-20200528-0028.html), de enero a mayo de 2020, de 19 fosas clandestinas en la entidad. 
 
 En contraste con lo difundido en 2019 por autoridades federales y con lo que han estado reportando los medios de comunicación locales, nacionales e internacionales, los datos oficiales de la Fiscalía General del Estado no indican la presencia de fosas clandestinas en Guanajuato ni de registros adecuados según lo prevé la _Ley General en Materia de Desaparición Forzada, Desaparición Cometida por Particulares y del Sistema Nacional de Búsqueda de Personas_. 
 
@@ -77,7 +67,7 @@ Más recientemente, el 11 de febrero de 2019, en la respuesta a la solicitud 354
 
 El 18 de agosto de 2018 apareció en el periódico AM Express una nota de Vania Jaramillo en que reporta una declaración del entonces Procurador de Justicia del Estado, Carlos Zamarripa, hoy Fiscal General, quien admitió la presencia de cinco fosas clandestinas, entendidas como excavaciones “para ocultar”. No ha sido la única vez en que Zamarripa, en declaraciones a la prensa, ha hablado de fosas clandestinas, sin embargo, de manera oficial su presencia, ubicación o características nunca han sido confirmadas, ni se encuentran al respecto cifras o registros de las autoridades, lo cual representa cuando menos un factor de confusión u opacidad, o bien, una verdadera anomalía.
 
-Respecto de la petición contestada por FGE el 21 de octubre de 2019, solicitud 02686819, en la que se preguntaba por el número de fosas clandestinas y de cuerpos, la Unidad reiteró que no se contaba con casos o registros bajo dichos parámetros en el estado, es decir que no había registro de fosas clandestinas, aunque reiteró la presencia entre 2015 y el 30/09/2019 de 20 cuerpos enterrados en la entidad, sin dar a conocer su ubicación, misma que no está asentada en ningún registro sino solamente en las carpetas de investigación de cada caso. 
+Respecto de la petición contestada por la FGE el 21 de octubre de 2019, solicitud 02686819, en la que se preguntaba por el número de fosas clandestinas y de cuerpos, la Unidad reiteró que no se contaba con casos o registros bajo dichos parámetros en el estado, es decir que no había registro de fosas clandestinas, aunque reiteró la presencia entre 2015 y el 30/09/2019 de 20 cuerpos enterrados en la entidad, sin dar a conocer su ubicación, misma que no está asentada en ningún registro sino solamente en las carpetas de investigación de cada caso. 
 
 Ante congresistas locales y medios, en noviembre de 2019, la fiscal especializada en desapariciones, Yolanda Ramírez, sostenía que sólo había 11 denuncias por desaparición en el estado, y esta información, de hecho, es confirmada dentro de la respuesta a solicitud de información pública que se acaba de citar. En ese momento, según datos recabados de peticiones ciudadanas, la cifra real era de por lo menos 1,443 personas desaparecidas (análisis combinado de folio 02686819 del 21/10/2019 y folio 02534319 del 4/10/2019, metodología en [PopLab.Mx](https://poplab.mx/article/SonyademasiadaslaspersonasquenosfaltanenGuanajuatolacrisisdelosdesaparecidos)).
 
@@ -91,181 +81,311 @@ Estos ejemplos muestran una diferencia substancial entre los datos recolectados 
 
 Finalmente, cabe señalar que esta situación de distintas formas ha sido agraviada, solapada o negada por parte de las autoridades en diferentes ocasiones. Tras una reunión histórica entre colectivos de familiares de personas desaparecidas, defensores de derechos humanos y distintas autoridades estatales y federales, el 9 de enero pasado el Secretario de Gobierno guanajuatense, Luis Ernesto Ayala, cuestionado sobre el tema y los números relativos a las fosas, [optó por no responder](https://zonafranca.mx/politica-sociedad/ddhh/guanajuato-no-tiene-actualizadas-cifras-de-desaparecidos/) y señalar la competencia de la Fiscalía al respecto. Reveladoras fueron las declaraciones de la titular de la Fiscalía Regional B de Irapuato, Claudia Mota, en diciembre de 2019, cuando entre otros maltratos a los familiares durante una reunión [negó rotundamente](https://soybarrio.com/familias-de-desaparecidos-en-irapuato-piden-ayuda-a-fiscalia-la-respuesta-rechazo-desden-y-negacion/) la presencia de fosas clandestinas en Guanajuato. [Lo mismo había hecho](https://zonafranca.mx/seguridad/en-guanajuato-no-hay-fosas-solo-son-hallazgos-de-restos-oseos-sophia-huett/), tres meses antes, Sophia Huett, Comisionada de la Unidad de Análisis y Estrategia para la Seguridad Ciudadana del estado, al sostener contra toda evidencia que, gracias a la rapidez y la solidez de las instituciones locales de seguridad y de procuración de justicia, no había entierros clandestinos porque la autoridad lograba intervenir antes del ocultamiento de los cuerpos. 
 
-
 ## - Cifras reportadas por prensa 
 
-```{r}
+```{r, echo=FALSE, include=FALSE, warning=FALSE, comment=FALSE}
+# Datos por municipio
+casos_por_municipio <- fosas_gto %>% 
+  group_by(municipio, inegi) %>%
+  summarise(total_fosas = sum(fosas, na.rm = T),
+            total_cuerpos = sum(total_cuerpos, na.rm = T),
+            total_masculino = sum(masculino, na.rm = T),
+            total_femenino = sum(femenino, na.rm = T)) %>% 
+  ungroup()
+
 # Inline code 
 suma_fosas <- casos_por_municipio %>% 
-  ungroup() %>% 
   summarise(suma = sum(total_fosas, na.rm = T))
 
 suma_cuerpos <- casos_por_municipio %>% 
-  ungroup() %>% 
   summarise(suma = sum(total_cuerpos, na.rm = T))
+
+mun_conf <- casos_por_municipio %>% nrow()
+
 ```
 
-Con base en lo reportado por la prensa ^[Para una revisión a la metodología empleada para obtener esta información consultar: González, Denise y Jorge Ruiz (et.al.). Violencia y terror. Hallazgos sobre fosas clandestinas en México (2019). Versión electrónica, disponible en: https://ibero.mx/files/2019/violencia-y-terror.pdf], en el estado de Guanajuato se han observado `r suma_fosas` fosas clandestinas, de las cuales se han exhumado `r suma_cuerpos` cuerpos en 29 de los 46 municipios, entre los años 2009 y al primer semestre de 2020. La tendencia del número de fosas observadas hasta el año 2019 puede observarse en la siguiente figura.^[Queremos hacer énfasis en que los datos que presentaremos de esta fuente no necesariamente están reflejando los patrones de hallazgos de fosas y de desaparición de personas en la entidad. Lo que estos datos están reportando es el proceso sobre cómo se produce/observa socialmente esta información, así como los posibles sesgos que tienen. Algunos de estos sesgos pueden ser: 1) capacidades institucionales para registrar los datos; 2) capacidad de abarcar determinadas áreas geográficas; 3) factores políticos y sociales que permitan que un hallazgo se reporte o no, entre otros.]
-
-
-```{r}
-# Sacar casos por año
+```{r, echo=FALSE, include=FALSE, warning=FALSE, comment=FALSE}
+# Casos por año
 cases_per_year <- fosas_gto %>%
   filter(year == 2009 | year == 2010 | year == 2011 | year == 2012 | year == 2013 |
          year == 2014 | year == 2015 | year == 2016 | year == 2017 | year == 2018 | year == 2019) %>% 
   group_by(year, entidad) %>%
-  # sumamos los casos
   summarise(total_fosas = sum(fosas, na.rm = T)) %>% 
   ungroup()
 ```
 
-<center>**Figura 1**<center> 
-```{r}
-# graficar tendencia 
+Con base en lo reportado por la prensa ^[Para una revisión a la metodología empleada para obtener esta información consultar: González, Denise y Jorge Ruiz (et.al.). Violencia y terror. Hallazgos sobre fosas clandestinas en México (2019). Versión electrónica, disponible en: https://ibero.mx/files/2019/violencia-y-terror.pdf], en el estado de Guanajuato se han observado `r suma_fosas` fosas clandestinas, de las cuales se han exhumado `r suma_cuerpos` cuerpos en `r mun_conf` de los 46 municipios, entre los años 2009 y al primer semestre de 2020. La tendencia del número de fosas observadas hasta el año 2019 puede observarse en la Figura \@ref(fig:fig1).^[Queremos hacer énfasis en que los datos que presentaremos de esta fuente no necesariamente están reflejando los patrones de hallazgos de fosas y de desaparición de personas en la entidad. Lo que estos datos están reportando es el proceso sobre cómo se produce/observa socialmente esta información, así como los posibles sesgos que tienen. Algunos de estos sesgos pueden ser: 1) capacidades institucionales para registrar los datos; 2) capacidad de abarcar determinadas áreas geográficas; 3) factores políticos y sociales que permitan que un hallazgo se reporte o no, entre otros.]
+
+
+```{r fig1, echo=F, fig.align="center", fig.cap="Tendencia de fosas reportadas."}
+# Tendencia de fosas reportadas 
 cases_per_year %>%
-  ggplot(aes(year, total_fosas, group = entidad)) + 
-  geom_line() + 
-  theme_bw() +
+  ggplot(aes(x=year, y=total_fosas)) + 
+  geom_line(color = "#cb181d", size = 1) + 
+  geom_label(aes(label=total_fosas), family="Courier New") +
+  scale_x_continuous(breaks = seq(from=min(cases_per_year$year), to=max(cases_per_year$year), by=1)) +
   theme_minimal(base_family = "Courier New") +
-  theme(plot.title = element_text(face = "bold")) +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(face = "bold")) +
   labs(y = NULL, 
        x = NULL,
-       title = "Fosas clandestinas observadas en Guanajuato por prensa",
+       title = "Fosas clandestinas observadas en Guanajuato por la prensa",
        subtitle = "2009-2019")
 ```
 
 ***
-Como se puede observar, entre los años 2009 a 2015, se reportaron menos de cinco fosas clandestinas al año, sin embargo, en el año 2016 inicia un comportamiento al alza, culminando en el año 2019 con el mayor número de fosas observadas por la prensa en esta entidad.  
+Como se puede observar en la Figura \@ref(fig:fig1), entre los años 2009 a 2015, se reportaron menos de cinco fosas clandestinas al año, sin embargo, en el año 2016 inicia un comportamiento al alza, culminando en el año 2019 con el mayor número de fosas observadas por la prensa en esta entidad.  
 
-Asimismo, el número total de fosas observadas por municipio puede consultarse en la siguiente figura.
+Asimismo, el número total de fosas observadas por municipio puede consultarse en la figura \@ref(fig:fig2).
 
-<center>**Figura 2**<center> 
-```{r}
-# Graficar fosas
+```{r fig2, echo=F, fig.align="center", fig.cap="Número de fosas en municipios con al menos una."}
+# Total de fosas por municipio
 casos_por_municipio %>%
-  ggplot(aes(x = total_fosas, y =  reorder(municipio, total_fosas), na.rm = T)) +
-  geom_point(size = 4, color = "#506C64") +
-  geom_text(aes(label = total_fosas, hjust = 2)) +
-  theme_bw() +
+  arrange(total_fosas) %>%
+  mutate(municipio=factor(municipio,municipio)) %>% 
+  ggplot(aes(x = municipio, y = total_fosas, na.rm = T)) +
+  geom_segment( aes(x=municipio, xend=municipio, y=0, yend=total_fosas)) +
+  geom_point(size = 4, color = "#7fcdbb") +
+  scale_y_continuous(breaks = seq(from=0, to=max(casos_por_municipio$total_fosas), by=1)) +
   theme_minimal(base_family = "Courier New") +
-  theme(plot.title = element_text(face = "bold")) +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        panel.grid.major.x = element_line(colour="grey", size=0.5)) +
   labs(x = NULL,
        y = NULL,
-       title = "Total de fosas observadas por municipio",
-       subtitle = "2009-2020")
+       title = "Total acumulado de fosas observadas por municipio",
+       subtitle = "Enero 2009 - Abril 2020") +
+  coord_flip()
 ```
 
 ***
-Cómo se puede observar, el municipio de Pénjamo es el que registra la mayor cantidad de fosas registradas entre 2009-2020, seguido de Irapuato, Villagrán y Celaya. Estos cuatro municipios concentran el 34.73% del total de fosas en la entidad.
+```{r, echo=FALSE, include=FALSE, warning=FALSE, comment=FALSE}
+# Concentración de fosas
+pct_top4_f <- casos_por_municipio %>% 
+  mutate(tot_denom=(sum(total_fosas))) %>% 
+  top_n(4, total_fosas) %>%
+  summarise(total_fosas = sum(total_fosas),
+            tot_denom = mean(tot_denom)) %>% 
+  mutate(pct = round((total_fosas/tot_denom)*100, 1))
+```
+
+Cómo se puede observar, el municipio de Pénjamo es el que registra la mayor cantidad de fosas registradas entre enero de 2009 y abril de 2020, seguido de Irapuato, Villagrán y Celaya. Estos cuatro municipios concentran el `r pct_top4_f$pct`% del total de fosas reportandas en ese periodo en la entidad.
 
 Asimismo, el número total de cuerpos exhumados por municipio puede observarse en la siguiente figura.
 
-<center>**Figura 3**<center> 
-```{r}
-# Graficar cuerpos 
+```{r fig3, echo=F, fig.align="center", fig.cap="Número de cuerpos exhumados registrados por municipio."}
+# Total de cuerpos por municipio
 casos_por_municipio %>%
-  ggplot(aes(x = total_cuerpos, y =  reorder(municipio, total_cuerpos), na.rm = T)) +
-  geom_point(size = 4, color = "#506C64") +
-  geom_text(aes(label = total_cuerpos, hjust = 2)) +
-  theme_bw() +
+  arrange(total_cuerpos) %>%
+  mutate(municipio=factor(municipio,municipio)) %>% 
+  ggplot(aes(x = municipio, y = total_cuerpos, na.rm = T)) +
+  geom_segment( aes(x=municipio, xend=municipio, y=0, yend=total_cuerpos)) +
+  geom_point(size = 4, color = "#7fcdbb") +
+  scale_y_continuous(breaks = seq(from=0, to=max(casos_por_municipio$total_cuerpos), by=2)) +
   theme_minimal(base_family = "Courier New") +
-  theme(plot.title = element_text(face = "bold")) +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        panel.grid.major.x = element_line(colour="grey", size=0.5)) +
   labs(x = NULL,
        y = NULL,
-       title = "Total de cuerpos exhumados por municipio",
-       subtitle = "2009-2020")
+       title = "Total acumulado de cuerpos exhumanos de fosas por municipio",
+       subtitle = "Enero 2009 - Abril 2020") +
+  coord_flip()
 ```
 
 ***
-A diferencia del total de fosas, el municipio Villagrán es aquel donde se han exhumado la mayor cantidad de cuerpos entre 2009-2020, seguido de Irapuato, Celaya y Pénjamos. Estos cuatro municipios concentran el 48.51% del total de cuerpos exhumados en la entidad. 
+```{r, echo=FALSE, include=FALSE, warning=FALSE, comment=FALSE}
+# Concentración de fosas
+pct_top4_c <- casos_por_municipio %>% 
+  mutate(tot_denom=(sum(total_cuerpos))) %>% 
+  top_n(4, total_cuerpos) %>%
+  summarise(total_cuerpos = sum(total_cuerpos),
+            tot_denom = mean(tot_denom)) %>% 
+  mutate(pct = round((total_cuerpos/tot_denom)*100, 1))
+```
+
+A diferencia del total de fosas, el municipio Villagrán es aquel donde se han exhumado la mayor cantidad de cuerpos entre 2009-2020, seguido de Irapuato, Celaya y Pénjamos. Estos cuatro municipios concentran el `r pct_top4_c$pct`% del total de cuerpos exhumados en la entidad. 
 
 # Mapa de municipios con fosas en la entidad 
+
 A continuación, se presenta un mapa a escala municipal que detallan la distribución territorial del total de fosas clandestinas observadas por la prensa el periodo estudiado. Al seleccionar los municipios se desglosa el total de fosas que registra cada uno. 
 
-
-```{r}
-# Mapa casos 
-guanajuato_mapa_prensa <- shp_munis %>%
-  # unir tablas
+```{r, echo=FALSE, include=FALSE, warning=FALSE, comment=FALSE}
+# Datos para mapa
+mapa_prensa <- shp_munis %>%
   left_join(casos_por_municipio,
             by = c("CVEGEO" = "inegi")) %>% 
   filter(CVE_ENT == "11")
 ```
 
-
-<center>**Mapa 1**<center> 
-```{r}
+```{r map1, echo=F, fig.align="center", fig.cap="Total de fosas por municipio."}
 # Paletas 
-pal <- colorNumeric("Oranges", guanajuato_mapa_prensa$total_fosas, na.color = "white")
-popup_sb <- paste0("Total de fosas: ", as.numeric(guanajuato_mapa_prensa$total_fosas))
-
+pal <- colorNumeric("Oranges", mapa_prensa$total_fosas, na.color = "white")
+popup_sb <- paste0("Total de fosas: ", as.numeric(mapa_prensa$total_fosas))
 
 # Mapear
 leaflet() %>%
   addProviderTiles("CartoDB.Positron") %>%
   setView(-101.0000000, 21.0000000, zoom = 8) %>% 
-  addPolygons(data = guanajuato_mapa_prensa , 
-              fillColor = ~pal(guanajuato_mapa_prensa$total_fosas),
+  addPolygons(data = mapa_prensa , 
+              fillColor = ~pal(mapa_prensa$total_fosas),
               fillOpacity = 0.7, 
               weight = 0.2, 
               smoothFactor = 0.2, 
               popup = ~popup_sb) %>%
   addLegend(pal = pal, 
-            values = guanajuato_mapa_prensa$total_fosas, 
+            values = mapa_prensa$total_fosas, 
             position = "bottomright", 
             title = "Total fosas")
 ```
 
 ***
-En el mapa se puede identificar cómo es que los municipios de las regiones Centro-Oeste, Sur-Oeste, Sur y Centro-Este son aquellos que han tenido observaciones de fosas en la entidad (municipios en naranja), mientras que la regiones Norte y Noreste permancen sin tener registros de fosas por la prensa (municipios en blanco).^[Lo que es imporante tomar en cuenta es que pudieron haber hallazgos de fosas en estos municipios, sin embargo la prensa no tuvo capacidad de registrarlos/observarlos.] 
+
+En el mapa se puede identificar cómo es que los municipios de las regiones Centro-Oeste, Sur-Oeste, Sur y Centro-Este son aquellos que han tenido observaciones de fosas en la entidad (municipios en naranja), mientras que la regiones Norte y Noreste permancen sin tener registros de fosas por la prensa (municipios en blanco).^[Lo que es importante tomar en cuenta es que pudieron haber hallazgos de fosas en estos municipios, sin embargo la prensa no tuvo capacidad de registrarlos/observarlos, por lo que se dejan los datos como __NA__ y no como cero.] 
 
 # Municipios con probabilidades altas de tener fosas aún no localizadas 
 
-En un esfuerzo conjunto realizado por el Programa de Derechos Humanos de la Universidad Iberoamericana (PDH Ibero), Data Cívica y el Human Rights Data Analysis Group (HRDAG), se llevó a cabo un análisis sobre las fosas clandestinas observadas en México por fiscalías estatales y por prensa de 2009 a 2018. A partir del desarrollo de un modelo de aprendizaje de máquina ^[Para una explicación detallada sobre cómo funciona el modelo de predicción consultar: Mónica, Meltis (et.al.). New results for the identification of clandestine graves in Mexico (2017), página electrónica, disponible en: https://hrdag.org/2017/11/23/new-clandestine-graves-mexico/  y Ball, Patrick (et.al.). Predicting the location of hidden graves in Mexico using machine learning models (2019). Conferencia, disponible en: https://www.youtube.com/watch?v=MheYVAEBXhw&list=PLY1zaOaaYKDts3Ww72naSEinbCVCPONnT&index=17], el objetivo fue identificar municipios con altas probabilidades de tener fosas clandestinas dada su similitud con los municipios ya registrados por ambas fuentes.^[Sabemos que los municipios que registran la prensa y las fiscalías estatales no siempre son los mismos, además de que tienen características geográficas, sociodemográficas y de violencia distintas. Por esta razón es importante presentar las predicciones con base en ambas fuentes dentro de nuestros mapas.] En el siguiente mapa se presentan los resultados de este modelo estadístico para el estado de Guanajuato.^[Los resultados están establecidos con puntajes entre 0 y 1. Con base en nuestro modelo, mientras más cercano al uno sea el resultado, mayor es la probabilidad de que ese municipio tenga una fosa clandestina. Por ejemplo, un municipio con un puntaje de 0.75 tendría un 75% de probabilidad de contar con fosas clandestinas.] Consideramos que los municipios que aparecen a continuación  deben ser priorizados por las autoridades responsables en materia de búsqueda y exhumación de personas desaparecidas para futuras exhumaciones y análisis de contexto en la entidad.
+En un esfuerzo conjunto realizado por el Programa de Derechos Humanos de la Universidad Iberoamericana (PDH Ibero), Data Cívica y el __Human Rights Data Analysis Group__ (HRDAG), se llevó a cabo un análisis sobre las fosas clandestinas observadas en México por fiscalías estatales y por prensa de 2009 a 2018. A partir del desarrollo de un modelo de aprendizaje de máquina ^[Para una explicación detallada sobre cómo funciona el modelo de predicción consultar: Mónica, Meltis (et.al.). New results for the identification of clandestine graves in Mexico (2017), página electrónica, disponible en: https://hrdag.org/2017/11/23/new-clandestine-graves-mexico/  y Ball, Patrick (et.al.). Predicting the location of hidden graves in Mexico using machine learning models (2019). Conferencia, disponible en: https://www.youtube.com/watch?v=MheYVAEBXhw&list=PLY1zaOaaYKDts3Ww72naSEinbCVCPONnT&index=17], el objetivo fue identificar municipios con altas probabilidades de tener fosas clandestinas dada su similitud con los municipios donde estas ya habían sido registradas antes por ambas fuentes.^[Sabemos que los municipios que registran la prensa y las fiscalías estatales no siempre son los mismos, además de que tienen características geográficas, sociodemográficas y de violencia distintas. Por esta razón es importante presentar las predicciones con base en ambas fuentes dentro de nuestros mapas.] En el siguiente mapa se presentan los resultados de este modelo estadístico para el estado de Guanajuato.^[Los resultados están establecidos con puntajes entre 0 y 1. Con base en nuestro modelo, mientras más cercano al uno sea el resultado, mayor es la probabilidad de que ese municipio tenga una fosa clandestina. Por ejemplo, un municipio con un puntaje de 0.75 tendría un 75% de probabilidad de contar con al menos una fosa clandestina.] Consideramos que los municipios que aparecen a continuación deben ser priorizados por las autoridades responsables en materia de búsqueda y exhumación de personas desaparecidas para futuras exhumaciones y análisis de contexto en la entidad.
 
-<center>**Mapa 2 y Mapa 3**<center>
-INSERTAR MAPA 
+```{r map2, echo=F, fig.align="center", fig.cap="Puntajes predichos por municipio."}
 
+map_one_depvar <- function(munis, yr, depvar = "fiscalia") {
+	if (depvar == "fiscalia") {
+		dat <- preds %>% rename(pred = fisc_pred)
+		mtitle <- "Fiscalía"
+	} else {
+		dat <- preds %>% rename(pred = prensa_pred)
+		mtitle <- "Prensa"
+	}
+	tempo <- munis %>%
+		left_join(dat, by = c("CVEGEO" = "inegi"))
+
+	ggplot(data = st_simplify(tempo, preserveTopology = T)) +
+		geom_sf(data = tempo, aes(geometry = geometry, fill = pred), size = 0.2, color = "black") +
+		scale_fill_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+							            low = "#ffeda0",
+							            high = "#f03b20",
+							            name = "Puntaje",
+							            na.value = "#bdbdbd") +
+		labs(title = mtitle) +
+		theme_void() +
+		theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+			  legend.position = c(0.8, 0.75))
+}
+
+munis <- shp_munis %>%
+  filter(CVE_ENT=="11")
+
+# 2011
+preds <- preds_gto %>% filter(year==2011)
+fisc_map <- map_one_depvar(munis, yr=2011, "fiscalia")
+prensa_map <- map_one_depvar(munis, yr=2011, "prensa")
+
+gtitle <- "Puntajes predichos: 2011"
+mc11 <- ggarrange(fisc_map, prensa_map, ncol = 2, common.legend = T)
+mc11 <- annotate_figure(mc11, 
+                      top = text_grob(gtitle,
+					            color = "black",
+					            face = "bold",
+					            size = 16))
+print(mc11)
+
+# 2018
+preds <- preds_gto %>% filter(year==2018)
+fisc_map <- map_one_depvar(munis, yr=2018, "fiscalia")
+prensa_map <- map_one_depvar(munis, yr=2018, "prensa")
+
+gtitle <- "Puntajes predichos: 2018"
+mc18 <- ggarrange(fisc_map, prensa_map, ncol = 2, common.legend = T)
+mc18 <- annotate_figure(mc18, 
+                      top = text_grob(gtitle,
+					            color = "black",
+					            face = "bold",
+					            size = 16))
+print(mc18)
+```
 
 ***
-Los mapas anteriores presentan los puntajes de nuestro modelo para la entidad en los años 2011 y 2018. La intensidad del color verde significa que la probabilidad de tener fosas era más alta para determinados municipios. De esta forma, por ejemplo, se puede ver que habían 10 municipios con una probabilidad mayor a 0.70 de tener fosas en 2017. El municipio con la probabilidad más alta era Celaya, seguido de Acámbaro y Silao de Victoria. A pesar de esto, en el año 2011 solo existieron dos municipios con registros de fosas, los cuales fueron Uriangato y San José Iturbide. Esto tiene dos posibles implicaciones. La primera es que los otros municipios pudieron tener fosas, sin embargo, no se registraron por la prensa. La segunda es que esos municipios, al ser similares a otros donde si existieron fosas y por el puntaje obtenido, debieron de ser considerados para realizar búsquedas de fosas en ese año. 
+Los mapas anteriores presentan los puntajes de nuestro modelo para la entidad en los años 2011 y 2018. La intensidad del color rojo significa que la probabilidad de tener fosas era más alta para determinados municipios. De esta forma, por ejemplo, se puede ver que existían 10 municipios con una probabilidad mayor a 0.70 de tener fosas en 2018. El municipio con la probabilidad más alta era Celaya, seguido de Acámbaro y Silao de Victoria. A pesar de esto, en el año 2011 solo existieron dos municipios con registros de fosas, los cuales fueron Uriangato y San José Iturbide. Esto tiene dos posibles implicaciones. La primera es que los otros municipios pudieron tener fosas, sin embargo, no se registraron por la prensa. La segunda es que esos municipios, al ser similares a otros donde si existieron fosas y por el puntaje obtenido, debieron de ser considerados para realizar búsquedas de fosas en ese año. 
 
 De igual forma, para 2018 vemos que aumentó el puntaje para la mayoría de los municipios de la entidad. De los 10 municipios con las probabilidades más altas, tres tuvieron registros por parte de la prensa (Irapuato, León, Villagrán), lo cual confirma que nuestro modelo identifica correctamente los municipios que pueden tener fosas. No solo esto, sino que Celaya, Tarímoro y Silao de la Victoria fueron aquellos que el modelo indicaba que tenían la probabilidad más alta de tener fosas, sin embargo no existieron registros por parte de la prensa. Aunado a esto, vemos que municipios en la región norte como San Felipe y San Luis de la Paz tuvieron probabildades mayores a 0.50 de tener fosas. Sin embargo, la prensa no cuenta con registros en estos municipios entre 2009-2020. A pesar de esto, dadas los puntajes, consideramos que estos municipios no deberían descartarse para iniciar procesos de búsqueda y exhumación. 
 
-Los resultados de los municipios con probabilidad es más altas en 2011 pueden consultarse en la siguiente tabla: 
+```{r fig4, echo=F, fig.align="center", fig.cap="Predicción del modelo por municipio."}
+# Scatters del modelo de predicción
+preds_gto %>%
+  filter(year %in% c(2011, 2018)) %>% 
+  mutate(catx = case_when(fisc_obsd == 1 & prensa_obsd == 1 ~ "Ambas fuentes",
+                          fisc_obsd == -1 & prensa_obsd == -1 & fisc_pred > 0.5 & prensa_pred > 0.5 ~ "Puntaje alto pero sin\nobservaciones de ninguna fuente",
+                          fisc_obsd == 1 & prensa_obsd != 1 ~ "Observadas sólo por fiscalía",
+                          fisc_obsd != 1 & prensa_obsd == 1 ~ "Observadas sólo por prensa",
+                          fisc_obsd == -1 & prensa_obsd == -1 & fisc_pred <= 0.5 & prensa_pred <= 0.5 ~ "Puntaje bajo pero sin\nobservaciones de ninguna fuente",
+		                      TRUE ~ NA_character_)) %>% 
+  filter(!is.na(catx)) %>% 
+  ggplot(data=., aes(x = prensa_pred, y = fisc_pred, color = catx)) +
+    geom_point(size = 3, alpha = 0.5) +
+    geom_abline(slope = 1, color = "red", linetype = "dashed") +
+    scale_color_manual(values = c("#66c2a5","#fc8d62","#8da0cb")) +
+    facet_wrap(~year) +
+    theme_minimal(base_family = "Courier New") +
+    theme(plot.title = element_text(face = "bold", hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5),
+          legend.position = "top",
+          strip.text = element_text(face = "bold"),
+          axis.text.x = element_text(angle = 30, hjust = 1),
+          axis.text = element_text(face = "bold"),
+          axis.title = element_text(face = "bold")) +
+    labs(x = "Puntajes predichos - prensa",
+         y = "Puntajes predichos - fiscalía",
+         title = "Puntajes predichos para existencia de fosas por municipio",
+         color = NULL) +
+    coord_fixed()
+```
 
-<center>**Tabla 1**<center> 
-Municipio               Score Fiscalía   Score Prensa Año
--------                 -------          -------      -------    
-Celaya                    0.94            0.97         2011
-Acámbaro                  0.92            0.94         2011
-Silao de la Victoria      0.90            0.90         2011
-Salvatierra               0.86            0.89         2011
-Pénjamo                   0.86            0.94         2011
-San Miguel de Allende     0.79            0.80         2011 
-Irapuato                  0.78            0.77         2011 
-Salamanca                 0.77            0.80         2011
-Apaseo el Grande          0.76            0.83         2011
-Cortazar                  0.76            0.69         2011
+Los resultados de los municipios con probabilidad es más altas en 2011 y 2018, y sin ninguna fosa observada por ninguna de las dos fuentes, pueden consultarse en la siguiente tabla. 
+
+```{r tab1, echo=FALSE, fig.align="center", fig.cap="Top 10 muncipios con puntajes más altos", fig.width=16}
+
+nom_muns <- shp_munis %>%
+  st_drop_geometry() %>% 
+  filter(CVE_ENT=="11") %>% 
+  select(CVEGEO, NOMGEO)
+
+tab11 <- preds_gto %>%
+  filter(year==2011) %>% 
+  arrange(-prensa_pred, -fisc_pred) %>%
+  filter(fisc_obsd == -1 & prensa_obsd == -1) %>%
+  slice(1:10) %>%
+  left_join(nom_muns, by = c("inegi" = "CVEGEO")) %>%
+  mutate(fisc_pred = round(fisc_pred, 2),
+         prensa_pred = round(prensa_pred, 2)) %>%
+  select(NOMGEO, fisc_pred, prensa_pred)
+
+tab18 <- preds_gto %>%
+  filter(year==2018) %>% 
+  arrange(-prensa_pred, -fisc_pred) %>%
+  filter(fisc_obsd == -1 & prensa_obsd == -1) %>%
+  slice(1:10) %>%
+  left_join(nom_muns, by = c("inegi" = "CVEGEO")) %>%
+  mutate(fisc_pred = round(fisc_pred, 2),
+         prensa_pred = round(prensa_pred, 2)) %>%
+  select(NOMGEO, fisc_pred, prensa_pred)
+
+tab <- bind_cols(tab11, tab18)
+names(tab) <- c("mun11", "pred_fisc11", "pred_prensa11", "mun18", "pred_fisc18", "pred_prensa18")
 
 
+kable(tab, col.names = c("Municipio",
+                         "Score fiscalías",
+                         "Score prensa",
+                         "Municipio",
+                         "Score fiscalías",
+                         "Score prensa")) %>%
+  kable_styling(c("striped", "bordered")) %>%
+  add_header_above(c("2011" = 3, "2018" = 3))
 
-Los resultados de los municipios con probabilidad es más altas en 2018 pueden consultarse en la siguiente tabla: 
-
-<center>**Tabla 2**<center> 
-Municipio               Score Fiscalía   Score Prensa Año
--------                 -------          -------      -------  
-Celaya                    0.94            0.96         2018
-Tarimoro                  0.93            0.81         2018
-Silao de la Victoria      0.92            0.89         2018
-Pénjamo                   0.92            0.85         2018
-Irapuato                  0.92            0.96         2018
-León                      0.91            0.95         2018 
-Villagrán                 0.91            0.85         2018 
-Apaseo el Grande          0.91            0.85         2018
-Salamanca                 0.91            0.96         2018
-Yuriria                   0.91            0.84         2018
-
+```
 
 ***
 
