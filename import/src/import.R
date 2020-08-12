@@ -29,6 +29,7 @@ clean_fosas <- function(files) {
                    clave_est = as.character(clave_est),
                    clave_municipal = as.character(clave_municipal),
                    municipio = as.character(municipio),
+                   fosas = as.integer(fosas),
                    cantidad_de_cuerpos_encontrados = as.integer(cantidad_de_cuerpos_encontrados),
                    masculino = as.integer(masculino), 
                    femenino = as.integer(femenino),

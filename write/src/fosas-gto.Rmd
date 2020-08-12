@@ -157,7 +157,7 @@ casos_por_municipio %>%
   labs(x = NULL,
        y = NULL,
        title = "Total acumulado de fosas observadas por municipio",
-       subtitle = "Enero 2009 - Abril 2020") +
+       subtitle = "Enero 2009 - Julio 2020") +
   coord_flip()
 ```
 
@@ -172,7 +172,7 @@ pct_top4_f <- casos_por_municipio %>%
   mutate(pct = round((total_fosas/tot_denom)*100, 1))
 ```
 
-Cómo se puede observar, el municipio de Pénjamo es el que registra la mayor cantidad de fosas registradas entre enero de 2009 y abril de 2020, seguido de Irapuato, Villagrán y Celaya. Estos cuatro municipios concentran el `r pct_top4_f$pct`% del total de fosas reportandas en ese periodo en la entidad.
+Cómo se puede observar, el municipio de Pénjamo es el que registra la mayor cantidad de fosas registradas entre enero de 2009 y julio de 2020, seguido de Irapuato, Villagrán y Celaya. Estos cuatro municipios concentran el `r pct_top4_f$pct`% del total de fosas reportandas en ese periodo en la entidad.
 
 Asimismo, el número total de cuerpos exhumados por municipio puede observarse en la siguiente figura.
 
@@ -192,7 +192,7 @@ casos_por_municipio %>%
   labs(x = NULL,
        y = NULL,
        title = "Total acumulado de cuerpos exhumanos de fosas por municipio",
-       subtitle = "Enero 2009 - Abril 2020") +
+       subtitle = "Enero 2009 - Julio 2020") +
   coord_flip()
 ```
 
